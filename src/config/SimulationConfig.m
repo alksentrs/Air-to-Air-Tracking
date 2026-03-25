@@ -79,11 +79,11 @@ classdef SimulationConfig
             %   The values follow the SDD typical parameters and provide
             %   a simple multi-drone scenario for testing.
             
-            T_end = 1000;
+            T_end = 2000;
             dt = 0.1;
             numDrones = 3;
             
-            aircraftSpeed = 100.0;
+            aircraftSpeed = 300.0;
             aircraftRadius = 1000.0;
             theta0 = pi;
             aircraftCenter = [0.0; 0.0];
@@ -93,7 +93,7 @@ classdef SimulationConfig
             
             % Arrange drones with different headings; none at orbit center so each has one detection passage.
             droneInitPos = [56510.34482758621   23793.10344827586   01379.31034482759;
-   31034.48275862069  -48006.89655172414   59310.34482758621];
+   31034.48275862069  -20800.689655172414   59310.34482758621];
             
             droneHeadings = [pi/6, -pi/3, pi/2];
             droneInitVel = zeros(2, numDrones);

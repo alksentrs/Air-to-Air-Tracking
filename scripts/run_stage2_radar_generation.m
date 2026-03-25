@@ -4,6 +4,7 @@ function run_stage2_radar_generation()
 %   from the side-looking radar (FOV and range gating). Plots and validates.
 
     % Ensure project src (and subfolders) is on the MATLAB path first.
+    close all;
     thisFile = mfilename('fullpath');
     projectRoot = fileparts(fileparts(thisFile));
     srcPath = fullfile(projectRoot, 'src');

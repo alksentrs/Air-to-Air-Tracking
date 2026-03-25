@@ -3,7 +3,7 @@ function run_stage3_tracking()
 %   Tracks are created when a detection cannot be associated with any existing
 %   (initialized) track. Predict/update iterate over numel(tracks).
 %   RMSE vs truth uses evaluation-only optimal track-to-drone matching.
-
+    close all;
     thisFile = mfilename('fullpath');
     projectRoot = fileparts(fileparts(thisFile));
     srcPath = fullfile(projectRoot, 'src');

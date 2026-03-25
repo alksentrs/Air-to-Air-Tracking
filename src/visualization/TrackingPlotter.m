@@ -30,7 +30,7 @@ classdef TrackingPlotter
             end
             legD = arrayfun(@(d) sprintf('Truth drone %d', d), 1:nd, 'UniformOutput', false);
             legT = arrayfun(@(i) sprintf('Est track %d', trackIds(i)), 1:nTr, 'UniformOutput', false);
-            legend([legD{:}, legT{:}], 'Location', 'best');
+            legend([legD, legT], 'Location', 'best');
         end
         
         function plotTargetDetail(t, p_true, logger, targetId)
