@@ -10,6 +10,10 @@ function run_stage2_radar_generation()
     addpath(genpath(srcPath), '-begin');
     rehash path;
 
+    if ~usejava('desktop')
+        set(0, 'DefaultFigureVisible', 'off');
+    end
+
     % Stage 1: ground truth
     cfg = SimulationConfig.default();
     scenario = Scenario(cfg);
@@ -59,6 +63,25 @@ function run_stage2_radar_generation()
     plotter.plot(t, radarResults);
 
     validate_stage2(t, radarResults, cfg);
+
+    % Save all figures and append to markdown report
+    reportPath = fullfile(projectRoot, 'docs', 'stage2_stage3_plots.md');
+    meta = [
+        "Script: scripts/run_stage2_radar_generation.m"
+        "numDrones: " + string(cfg.numDrones)
+        "dt: " + string(cfg.dt)
+        "Radar FOV half-angle (deg): " + string(rad2deg(radar.fovHalfAngle))
+    ];
+    [pngRelPaths, ~] = FigureSaver.saveAllOpen(string(projectRoot), "stage2");
+    FigureSaver.appendToReport(string(reportPath), "Stage 2 (radar generation)", pngRelPaths, meta);
+
+    % Export a stable subset for README/docs
+    FigureSaver.exportSelected(string(projectRoot), "stage2", [
+        "Stage 2: Trajectories"
+        "Stage 2: Range vs time"
+        "Stage 2: Azimuth vs time"
+        "Stage 2: Detection timeline"
+    ]);
 end
 
 function validate_stage2(t, radarResults, cfg)

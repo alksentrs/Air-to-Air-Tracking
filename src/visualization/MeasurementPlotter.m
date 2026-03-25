@@ -10,7 +10,7 @@ classdef MeasurementPlotter
             colors = lines(max(numDrones, 1));
             
             % Range vs time
-            figure;
+            figure('Name', 'Stage 2: Range vs time');
             hold on; grid on;
             xlabel('Time [s]');
             ylabel('Range [m]');
@@ -25,7 +25,7 @@ classdef MeasurementPlotter
             legend('Location', 'best');
             
             % Azimuth vs time
-            figure;
+            figure('Name', 'Stage 2: Azimuth vs time');
             hold on; grid on;
             xlabel('Time [s]');
             ylabel('Azimuth [rad]');
@@ -40,7 +40,7 @@ classdef MeasurementPlotter
             legend('Location', 'best');
             
             % Detection timeline (visible / not visible)
-            figure;
+            figure('Name', 'Stage 2: Detection timeline');
             for i = 1:numDrones
                 subplot(numDrones, 1, i);
                 stairs(t, double(radarResults.detected(i, :)), 'Color', colors(i, :), 'LineWidth', 1);

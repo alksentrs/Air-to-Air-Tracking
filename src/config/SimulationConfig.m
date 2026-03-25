@@ -79,7 +79,7 @@ classdef SimulationConfig
             %   The values follow the SDD typical parameters and provide
             %   a simple multi-drone scenario for testing.
             
-            T_end = 2000;
+            T_end = 1000;
             dt = 0.1;
             numDrones = 3;
             

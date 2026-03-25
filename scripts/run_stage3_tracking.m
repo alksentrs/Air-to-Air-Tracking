@@ -179,5 +179,22 @@ function run_stage3_tracking()
         shg;
     end
 
+    % Save all figures and append to markdown report
+    reportPath = fullfile(projectRoot, 'docs', 'stage2_stage3_plots.md');
+    meta = [
+        "Script: scripts/run_stage3_tracking.m"
+        "rng seed: 42"
+        "numDrones: " + string(cfg.numDrones)
+        "dt: " + string(cfg.dt)
+        "Tracks created: " + string(numTracks)
+    ];
+    [pngRelPaths, ~] = FigureSaver.saveAllOpen(string(projectRoot), "stage3");
+    FigureSaver.appendToReport(string(reportPath), "Stage 3 (tracking)", pngRelPaths, meta);
+
+    % Export a stable subset for README/docs
+    FigureSaver.exportSelected(string(projectRoot), "stage3", [
+        "Stage 3: Tracking"
+    ]);
+
     fprintf('\nStage 3 complete.\n');
 end

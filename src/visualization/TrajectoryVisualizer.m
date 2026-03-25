@@ -40,7 +40,7 @@ classdef TrajectoryVisualizer
             dronePos = results.dronePos;
             numDrones = numel(dronePos);
             
-            figure;
+            figure('Name', 'Stage 2: Trajectories');
             hold on;
             grid on;
             axis equal;
