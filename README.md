@@ -1,4 +1,4 @@
-# Radar in aeroplane for drones
+# Air to Air Tracking
 
 MATLAB project that simulates an aircraft flying a trajectory, generates side-looking radar measurements of multiple drones, and tracks those drones using an EKF with global nearest-neighbor (GNN) association.
 
@@ -26,31 +26,31 @@ Both scripts add `src/` (and subfolders) to the MATLAB path internally.
 
 ## Outputs (plots + report)
 When you run the scripts, they will:
-- Save all currently open figures as PNGs under:
+- Save all currently open figures as PNGs under (local only; not tracked in git):
   - `docs/figures/stage2/<timestamp>/`
   - `docs/figures/stage3/<timestamp>/`
 - Export a **stable subset** of key figures (good for documentation) under:
   - `docs/figures/selected/stage2/`
   - `docs/figures/selected/stage3/`
-- Append the saved plots into a single Markdown “doc”:
+- Append the saved plots into a single Markdown “doc” (local only; not tracked):
   - `docs/stage2_stage3_plots.md`
 
-If you “can’t find the images”, check `docs/figures/` and the generated report file above.
+If you “can’t find the images”, check `docs/figures/` and the generated report file above. Only `docs/figures/selected/` is kept in this repository.
 
 ## Selected figures (for quick overview)
 These images are created/updated when you run stage 2 and stage 3.
 
 ### Stage 2
-![Stage 2 trajectories](docs/figures/selected/stage2/Stage_2_Trajectories.png)
-![Stage 2 range vs time](docs/figures/selected/stage2/Stage_2_Range_vs_time.png)
-![Stage 2 azimuth vs time](docs/figures/selected/stage2/Stage_2_Azimuth_vs_time.png)
-![Stage 2 detection timeline](docs/figures/selected/stage2/Stage_2_Detection_timeline.png)
+![Stage 2 trajectories](docs/figures/selected/stage2/Stage2Trajectories.png)
+![Stage 2 range vs time](docs/figures/selected/stage2/Stage2Rangevstime.png)
+![Stage 2 azimuth vs time](docs/figures/selected/stage2/Stage2Azimuthvstime.png)
+![Stage 2 detection timeline](docs/figures/selected/stage2/Stage2Detectiontimeline.png)
 
 ### Stage 3
-![Stage 3 tracking overview](docs/figures/selected/stage3/Stage_3_Tracking.png)
+![Stage 3 tracking overview](docs/figures/selected/stage3/Stage3Tracking.png)
 
 ## Repository structure
 - `scripts/`: entry points to run stages.
 - `src/`: simulation, sensors, tracking, and visualization code.
-- `docs/`: generated plot report and exported images.
+- `docs/`: exported images under `figures/selected/` (per-run dumps and the appended report are gitignored).
 
