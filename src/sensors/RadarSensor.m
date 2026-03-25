@@ -72,7 +72,7 @@ classdef RadarSensor
             sigmaAzimuth = deg2rad(1.0); % rad
             fovHalfAngle = deg2rad(1);   % +/- 1 deg => 2 deg beam; single short passage per orbit
             rhoMin = 50.0;
-            rhoMax = 10000.0;
+            rhoMax = 60000.0;
             sensor = RadarSensor(sigmaRange, sigmaAzimuth, fovHalfAngle, rhoMin, rhoMax);
         end
     end
