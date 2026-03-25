@@ -167,10 +167,38 @@ function run_stage3_tracking()
     end
 
     if numTracks > 0
+        pTrueByTrack = repmat({nan(2, N)}, numTracks, 1);
+        for p = 1:numel(trIdx)
+            ti = trIdx(p);
+            di = drIdx(p);
+            if ti >= 1 && ti <= numTracks && di >= 1 && di <= numel(dronePos)
+                pTrueByTrack{ti} = dronePos{di};
+            end
+        end
+
+        measXY = nan(2, 0);
+        for k = 1:N
+            p_a = pA(:, k);
+            n_in = CoordinateUtils.inwardNormal(p_a, center);
+            tt = CoordinateUtils.tangentVector(p_a, center);
+            R_radar_cols = [n_in, tt];
+            for i = 1:numDrones
+                if radarResults.detected(i, k)
+                    rho = radarResults.rho_meas(i, k);
+                    phi = radarResults.phi_meas(i, k);
+                    if isfinite(rho) && isfinite(phi)
+                        p_radar = [rho * cos(phi); rho * sin(phi)];
+                        p_world = p_a + R_radar_cols * p_radar;
+                        measXY(:, end+1) = p_world; %#ok<AGROW>
+                    end
+                end
+            end
+        end
+
         trackIds = cellfun(@(tr) tr.targetId, tracks);
-        TrackingPlotter.plotAll(t, dronePos, loggers, trackIds);
+        TrackingPlotter.plotAll(t, dronePos, loggers, trackIds, measXY);
         for j = 1:numTracks
-            TrackingPlotter.plotTargetDetail(t, nan(2, N), tracks{j}.logger, tracks{j}.targetId);
+            TrackingPlotter.plotTargetDetail(t, pTrueByTrack{j}, tracks{j}.logger, tracks{j}.targetId);
         end
     else
         fprintf('No tracks to plot.\n');
