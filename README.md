@@ -41,10 +41,10 @@ If you “can’t find the images”, check `docs/figures/` and the generated re
 These images are created/updated when you run stage 2 and stage 3.
 
 ### Stage 2
-![Stage 2 trajectories](docs/figures/selected/stage2/Stage2Trajectories2.png)
-![Stage 2 range vs time](docs/figures/selected/stage2/Stage2Rangevstime2.png)
-![Stage 2 azimuth vs time](docs/figures/selected/stage2/Stage2Azimuthvstime2.png)
-![Stage 2 detection timeline](docs/figures/selected/stage2/Stage2Detectiontimeline2.png)
+![Stage 2 trajectories](docs/figures/selected/stage2/Stage2Trajectories.png)
+![Stage 2 range vs time](docs/figures/selected/stage2/Stage2Rangevstime.png)
+![Stage 2 azimuth vs time](docs/figures/selected/stage2/Stage2Azimuthvstime.png)
+![Stage 2 detection timeline](docs/figures/selected/stage2/Stage2Detectiontimeline.png)
 
 ### Stage 3
 ![Stage 3 tracking overview](docs/figures/selected/stage3/Stage3Tracking.png)
