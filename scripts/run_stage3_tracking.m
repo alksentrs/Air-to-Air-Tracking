@@ -16,6 +16,7 @@ function run_stage3_tracking()
     rng(42);
 
     cfg = SimulationConfig.default();
+    procCfg = ProcessingConfig.default();
     scenario = Scenario(cfg);
     simulator = Simulator(cfg, scenario);
     results = simulator.run();
@@ -28,8 +29,8 @@ function run_stage3_tracking()
     dronePos = results.dronePos;
     center = cfg.aircraftCenter;
 
-    radar = RadarSensor.default();
-    R = diag([radar.sigmaRange^2, radar.sigmaAzimuth^2]);
+    radar = RadarSensor.default(procCfg);
+    R = ProcessingConfig.measurementNoiseCov(procCfg);
 
     radarResults.detected = false(numDrones, N);
     radarResults.rho_meas = NaN(numDrones, N);
@@ -50,7 +51,7 @@ function run_stage3_tracking()
 
     xtest = [1000; 500; -10; 5];
     pat = [200; 300];
-    okJac = RadarMeasurementModel.verifyJacobianNumerical(xtest, pat, center);
+    okJac = RadarMeasurementModel.verifyJacobianNumerical(xtest, pat, center, procCfg.jacobianRelTol, procCfg.numericalJacEpsX);
     fprintf('Analytic vs numerical H check: %s\n', char(string(okJac)));
 
     tracks = {};
@@ -82,7 +83,7 @@ function run_stage3_tracking()
             trueSrc = trueSrc(perm);
         end
 
-        [pairs, newMeasIdx] = GlobalNearestNeighborAssociator.assign(measList, tracks, p_a, center, R);
+        [pairs, newMeasIdx] = GlobalNearestNeighborAssociator.assign(measList, tracks, p_a, center, R, procCfg.gnnGateChi2Thresh);
 
         nt0 = numel(tracks);
         nuByTrack = cell(nt0, 1);
@@ -105,7 +106,7 @@ function run_stage3_tracking()
             mi = newMeasIdx(ii);
             meas = measList{mi};
             logg = TrackingLogger(N);
-            ekf = EKFTracker.fromRadarSensor(center, dt, radar);
+            ekf = EKFTracker.fromRadarSensor(center, dt, radar, procCfg);
             tracks{end+1} = Track(nextTrackId, ekf, logg); %#ok<AGROW>
             nextTrackId = nextTrackId + 1;
             tracks{end}.ekf.update(meas);

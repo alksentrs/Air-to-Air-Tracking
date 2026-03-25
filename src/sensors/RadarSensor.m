@@ -65,15 +65,13 @@ classdef RadarSensor
     end
     
     methods (Static)
-        function sensor = default()
-            %DEFAULT Radar with narrow illuminated sector and noise for Stage 2.
-            %   Narrow beam (small FOV) so each target produces one detection passage per orbit.
-            sigmaRange = 5.0;      % m
-            sigmaAzimuth = deg2rad(1.0); % rad
-            fovHalfAngle = deg2rad(1);   % +/- 1 deg => 2 deg beam; single short passage per orbit
-            rhoMin = 50.0;
-            rhoMax = 60000.0;
-            sensor = RadarSensor(sigmaRange, sigmaAzimuth, fovHalfAngle, rhoMin, rhoMax);
+        function sensor = default(procCfg)
+            %DEFAULT Radar with narrow illuminated sector and noise for Stage 2/3.
+            %   If procCfg omitted, use ProcessingConfig.default().
+            arguments
+                procCfg (1,1) ProcessingConfig = ProcessingConfig.default()
+            end
+            sensor = ProcessingConfig.buildRadarSensor(procCfg);
         end
     end
 end

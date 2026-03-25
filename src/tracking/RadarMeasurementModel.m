@@ -46,19 +46,24 @@ classdef RadarMeasurementModel
                  dphi_dp(:).', 0, 0];
         end
         
-        function ok = verifyJacobianNumerical(x_target, p_aircraft, center, relTol)
+        function ok = verifyJacobianNumerical(x_target, p_aircraft, center, relTol, eps_x)
             %VERIFYJACOBIANNUMERICAL Compare analytic H to finite-difference (debug).
-            if nargin < 4
-                relTol = 1e-5;
+            if nargin < 4 || isempty(relTol)
+                relTol = ProcessingConfig.default().jacobianRelTol;
+            end
+            if nargin < 5 || isempty(eps_x)
+                eps_x = ProcessingConfig.default().numericalJacEpsX;
             end
             H = RadarMeasurementModel.jacobianH(x_target, p_aircraft, center);
-            Hn = RadarMeasurementModel.numericalJacobianH(x_target, p_aircraft, center);
+            Hn = RadarMeasurementModel.numericalJacobianH(x_target, p_aircraft, center, eps_x);
             err = max(abs(H(:) - Hn(:)) ./ max(1e-9, abs(Hn(:))));
             ok = err < relTol;
         end
         
-        function Hn = numericalJacobianH(x_target, p_aircraft, center)
-            eps_x = 1e-4;
+        function Hn = numericalJacobianH(x_target, p_aircraft, center, eps_x)
+            if nargin < 4 || isempty(eps_x)
+                eps_x = ProcessingConfig.default().numericalJacEpsX;
+            end
             z0 = RadarMeasurementModel.h(x_target, p_aircraft, center);
             Hn = zeros(2, 4);
             for j = 1:4

@@ -4,7 +4,7 @@ classdef GlobalNearestNeighborAssociator
     %   Unassociated measurements are returned as newMeasIdx for track birth (caller).
     
     methods (Static)
-        function [pairs, newMeasIdx] = assign(measList, tracks, p_aircraft, center, R)
+        function [pairs, newMeasIdx] = assign(measList, tracks, p_aircraft, center, R, gateThresh)
             %ASSIGN pairs: struct array measIdx, trackIdx for updates to existing tracks.
             %   newMeasIdx: row vector of meas indices needing new Track creation + init.
             arguments
@@ -13,6 +13,7 @@ classdef GlobalNearestNeighborAssociator
                 p_aircraft (2,1) double
                 center (2,1) double
                 R (2,2) double
+                gateThresh (1,1) double {mustBePositive} = ProcessingConfig.default().gnnGateChi2Thresh
             end
             M = numel(measList);
             N = numel(tracks);
@@ -26,8 +27,7 @@ classdef GlobalNearestNeighborAssociator
                 newMeasIdx = 1:M;
                 return;
             end
-            
-            gateThresh = 9.21; % chi2, 2 DOF, ~99%
+            % gateThresh is a chi-square threshold for NIS (2 DOF).
             
             initIdx = GlobalNearestNeighborAssociator.collectInitTrackIndices(tracks);
             nInit = numel(initIdx);

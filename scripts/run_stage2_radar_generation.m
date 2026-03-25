@@ -17,6 +17,7 @@ function run_stage2_radar_generation()
 
     % Stage 1: ground truth
     cfg = SimulationConfig.default();
+    procCfg = ProcessingConfig.default();
     scenario = Scenario(cfg);
     simulator = Simulator(cfg, scenario);
     results = simulator.run();
@@ -32,7 +33,7 @@ function run_stage2_radar_generation()
     if isempty(which('RadarSensor', '-all'))
         error('RadarSensor not found. Ensure %s is on the path.', fullfile(srcPath, 'sensors'));
     end
-    radar = RadarSensor.default();
+    radar = RadarSensor.default(procCfg);
     fprintf('Radar FOV half-angle = %.2f deg (beamwidth = %.2f deg)\n', ...
         rad2deg(radar.fovHalfAngle), 2*rad2deg(radar.fovHalfAngle));
 

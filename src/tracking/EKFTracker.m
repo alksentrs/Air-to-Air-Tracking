@@ -8,6 +8,8 @@ classdef EKFTracker < StateEstimator
         center       % orbit center in {W} (2x1), for inward radar frame
         dt           % nominal time step [s] (F matrix)
         sigmaAccel   % process noise intensity [m/s^2] for CV model
+        initPosVarScaleFromRangeVar  % multiplier on range variance for px/py init
+        initVelStd                  % [m/s] 1-sigma initial velocity uncertainty
         F            % 4 x 4 state transition (CV)
         Q            % 4 x 4 process noise covariance
         R            % 2 x 2 measurement noise (range, azimuth)
@@ -15,17 +17,21 @@ classdef EKFTracker < StateEstimator
     end
     
     methods
-        function obj = EKFTracker(orbitCenter, dt, sigmaAccel, R_meas)
+        function obj = EKFTracker(orbitCenter, dt, sigmaAccel, R_meas, initPosVarScaleFromRangeVar, initVelStd)
             %EKFTRACKER Construct EKF for one target.
             arguments
                 orbitCenter (2,1) double
                 dt (1,1) double {mustBePositive}
                 sigmaAccel (1,1) double {mustBeNonnegative}
                 R_meas (2,2) double
+                initPosVarScaleFromRangeVar (1,1) double {mustBePositive} = 4.0
+                initVelStd (1,1) double {mustBeNonnegative} = 30.0
             end
             obj.center = orbitCenter(:);
             obj.dt = dt;
             obj.sigmaAccel = sigmaAccel;
+            obj.initPosVarScaleFromRangeVar = initPosVarScaleFromRangeVar;
+            obj.initVelStd = initVelStd;
             obj.F = [1, 0, dt, 0; ...
                      0, 1, 0, dt; ...
                      0, 0, 1, 0; ...
@@ -66,7 +72,11 @@ classdef EKFTracker < StateEstimator
             p_t = p_aircraft(:) + p_rel;
             obj.x = [p_t; 0; 0];
             % Large initial uncertainty (position from noisy meas, velocity unknown)
-            obj.P = diag([obj.R(1,1) * 4, obj.R(1,1) * 4, 30^2, 30^2]);
+            obj.P = diag([ ...
+                obj.R(1,1) * obj.initPosVarScaleFromRangeVar, ...
+                obj.R(1,1) * obj.initPosVarScaleFromRangeVar, ...
+                obj.initVelStd^2, ...
+                obj.initVelStd^2]);
             obj.initialized = true;
         end
         
@@ -136,16 +146,17 @@ classdef EKFTracker < StateEstimator
                      0,     dt3/2, 0,     dt2];
         end
         
-        function ekf = fromRadarSensor(orbitCenter, dt, radar)
+        function ekf = fromRadarSensor(orbitCenter, dt, radar, procCfg)
             %FROMRADARSENSOR Build EKF with R matching RadarSensor noise sigmas.
             arguments
                 orbitCenter (2,1) double
                 dt (1,1) double
                 radar (1,1) RadarSensor
+                procCfg (1,1) ProcessingConfig = ProcessingConfig.default()
             end
             R = diag([radar.sigmaRange^2, radar.sigmaAzimuth^2]);
-            sigmaAccel = 2.0; % m/s^2 process noise (tunable)
-            ekf = EKFTracker(orbitCenter, dt, sigmaAccel, R);
+            ekf = EKFTracker(orbitCenter, dt, procCfg.sigmaAccel, R, ...
+                procCfg.initPosVarScaleFromRangeVar, procCfg.initVelStd);
         end
     end
 end

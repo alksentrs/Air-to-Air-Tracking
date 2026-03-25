@@ -1,6 +1,10 @@
 # Generated per-run figure dumps (not versioned; use docs/figures/selected for stable assets)
 docs/figures/stage2/
 docs/figures/stage3/
+docs/figures/selected
 
 # Appended report from FigureSaver (local only)
 docs/stage2_stage3_plots.md
+
+# MATLAB autosave files
+*.asv
